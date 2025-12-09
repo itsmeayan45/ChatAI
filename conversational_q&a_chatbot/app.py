@@ -167,3 +167,4 @@ if uploaded_file:
             st.rerun()
 else:
     st.info("Please upload a PDF file to start chatting.")
+# Adding a temp.pdf for checking , this is mini project of my collage in Operating System Lab
