@@ -194,17 +194,23 @@ if uploaded_file:
         st.chat_message("user").write(user_input)
         
         # Get response
-        with st.spinner("Thinking..."):
-            response = st.session_state.conversational_rag_chain.invoke(
-                {"input": user_input},
-                config={"configurable": {"session_id": session_id}}
-            )
-        
-      
-        st.chat_message("assistant").write(response['answer'])
-        
-        # Rerun to update chat history display
-        st.rerun()
+        try:
+            with st.spinner("Thinking..."):
+                response = st.session_state.conversational_rag_chain.invoke(
+                    {"input": user_input},
+                    config={"configurable": {"session_id": session_id}}
+                )
+            
+            st.chat_message("assistant").write(response['answer'])
+            
+            # Rerun to update chat history display
+            st.rerun()
+        except Exception as e:
+            error_msg = str(e)
+            if "401" in error_msg or "authentication" in error_msg.lower():
+                st.error("❌ Authentication failed. Please check your API key in Streamlit secrets.")
+            else:
+                st.error(f"❌ Error: {error_msg}")
         st.rerun()
 else:
     st.info("Please upload a PDF file to start chatting.")
