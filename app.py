@@ -44,19 +44,23 @@ st.write("Upload a PDF and have a conversation about its content")
 # Get API key from Streamlit secrets (for cloud) or environment (for local)
 try:
     api_key = st.secrets["OPENROUTER_API_KEY"]
+    # Remove quotes if present
+    api_key = api_key.strip('"').strip("'")
 except (KeyError, FileNotFoundError):
-    api_key = os.getenv("OPENROUTER_API_KEY", "")
+    api_key = os.getenv("OPENROUTER_API_KEY", "").strip('"').strip("'")
 
 if not api_key:
     st.error("Please set OPENROUTER_API_KEY in Streamlit secrets or .env file")
     st.info("For Streamlit Cloud: Go to App Settings → Secrets and add: OPENROUTER_API_KEY = 'your-key-here'")
     st.stop()
 
+# Debug info (remove after testing)
+st.sidebar.text(f"API Key loaded: {api_key[:10]}...")
 
 @st.cache_resource
 def get_llm():
     return ChatOpenAI(
-        model="openai/gpt-oss-20b:free",
+        model="google/gemini-flash-1.5:free",
         api_key=SecretStr(api_key),
         base_url="https://openrouter.ai/api/v1",
         temperature=0.7
