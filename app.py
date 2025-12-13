@@ -114,9 +114,11 @@ if uploaded_file:
                 os.remove(temp_pdf)
             
             st.success("PDF processed successfully! You can now ask questions.")
+            # Reset chain so it gets recreated with new vectorstore
+            st.session_state.conversational_rag_chain = None
     
-    
-    if st.session_state.vectorstore is not None and (st.session_state.conversational_rag_chain is None or st.session_state.pdf_hash == current_hash):
+    # Create chains (only if not already created)
+    if st.session_state.vectorstore is not None and st.session_state.conversational_rag_chain is None:
         retriever = st.session_state.vectorstore.as_retriever()
         
         
@@ -201,7 +203,8 @@ if uploaded_file:
       
         st.chat_message("assistant").write(response['answer'])
         
-        
+        # Rerun to update chat history display
+        st.rerun()
         st.rerun()
 else:
     st.info("Please upload a PDF file to start chatting.")
