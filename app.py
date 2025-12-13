@@ -177,22 +177,10 @@ if uploaded_file:
             output_messages_key="answer"
         )
     
-    # Display chat history
-    if session_id in st.session_state.store:
-        st.subheader("Chat History")
-        for message in st.session_state.store[session_id].messages:
-            if message.type == "human":
-                st.chat_message("user").write(message.content)
-            else:
-                st.chat_message("assistant").write(message.content)
-    
     # User input
     user_input = st.chat_input("Ask a question about the PDF:")
     
     if user_input and st.session_state.conversational_rag_chain:
-        
-        st.chat_message("user").write(user_input)
-        
         # Get response
         try:
             with st.spinner("Thinking..."):
@@ -201,10 +189,7 @@ if uploaded_file:
                     config={"configurable": {"session_id": session_id}}
                 )
             
-            st.chat_message("assistant").write(response['answer'])
-            
-            # Rerun to update chat history display
-            st.rerun()
+            st.write("**Answer:**", response['answer'])
         except Exception as e:
             error_msg = str(e)
             if "401" in error_msg or "authentication" in error_msg.lower():
