@@ -41,10 +41,15 @@ st.title("ChatAI")
 st.write("Upload a PDF and have a conversation about its content")
 
 
-api_key = os.getenv("OPENROUTER_API_KEY", "")
+# Get API key from Streamlit secrets (for cloud) or environment (for local)
+try:
+    api_key = st.secrets["OPENROUTER_API_KEY"]
+except (KeyError, FileNotFoundError):
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
 
 if not api_key:
-    st.error("Please set OPENROUTER_API_KEY in your .env file")
+    st.error("Please set OPENROUTER_API_KEY in Streamlit secrets or .env file")
+    st.info("For Streamlit Cloud: Go to App Settings → Secrets and add: OPENROUTER_API_KEY = 'your-key-here'")
     st.stop()
 
 
