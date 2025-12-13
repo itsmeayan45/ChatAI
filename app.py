@@ -80,6 +80,8 @@ if 'conversational_rag_chain' not in st.session_state:
     st.session_state.conversational_rag_chain = None
 if 'pdf_hash' not in st.session_state:
     st.session_state.pdf_hash = None
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
 
 # Upload PDF
 uploaded_file = st.file_uploader("Choose a PDF file:", type='pdf')
@@ -177,10 +179,20 @@ if uploaded_file:
             output_messages_key="answer"
         )
     
+    # Display chat messages
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+    
     # User input
     user_input = st.chat_input("Ask a question about the PDF:")
     
     if user_input and st.session_state.conversational_rag_chain:
+        # Add user message to chat
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.write(user_input)
+        
         # Get response
         try:
             with st.spinner("Thinking..."):
@@ -189,14 +201,16 @@ if uploaded_file:
                     config={"configurable": {"session_id": session_id}}
                 )
             
-            st.write("**Answer:**", response['answer'])
+            # Add assistant message to chat
+            st.session_state.messages.append({"role": "assistant", "content": response['answer']})
+            with st.chat_message("assistant"):
+                st.write(response['answer'])
         except Exception as e:
             error_msg = str(e)
             if "401" in error_msg or "authentication" in error_msg.lower():
                 st.error("❌ Authentication failed. Please check your API key in Streamlit secrets.")
             else:
                 st.error(f"❌ Error: {error_msg}")
-        st.rerun()
 else:
     st.info("Please upload a PDF file to start chatting.")
 # Adding a temp.pdf for checking , this is mini project of my collage in Operating System Lab
