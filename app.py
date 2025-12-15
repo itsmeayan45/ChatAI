@@ -212,9 +212,9 @@ if uploaded_file:
         except Exception as e:
             error_msg = str(e)
             if "401" in error_msg or "authentication" in error_msg.lower():
-                st.error("❌ Authentication failed. Please check your API key in Streamlit secrets.")
+                st.error(" Authentication failed. Please check your API key in Streamlit secrets.")
             else:
-                st.error(f"❌ Error: {error_msg}")
+                st.error(f"Error: {error_msg}")
 else:
     st.info("Please upload a PDF file to start chatting.")
 # Adding a temp.pdf for checking , this is mini project of my collage in Operating System Lab
