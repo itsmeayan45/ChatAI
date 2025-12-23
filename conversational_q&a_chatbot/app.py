@@ -41,17 +41,26 @@ st.title("ChatAI")
 st.write("Upload a PDF and have a conversation about its content")
 
 
-api_key = os.getenv("OPENROUTER_API_KEY", "")
+# Get API key from Streamlit secrets (for cloud) or environment (for local)
+try:
+    api_key = st.secrets["OPENROUTER_API_KEY"]
+    # Remove quotes if present
+    api_key = api_key.strip('"').strip("'")
+except (KeyError, FileNotFoundError):
+    api_key = os.getenv("OPENROUTER_API_KEY", "").strip('"').strip("'")
 
 if not api_key:
-    st.error("Please set OPENROUTER_API_KEY in your .env file")
+    st.error("Please set OPENROUTER_API_KEY in Streamlit secrets or .env file")
+    st.info("For Streamlit Cloud: Go to App Settings → Secrets and add: OPENROUTER_API_KEY = 'your-key-here'")
     st.stop()
 
+# Debug info (remove after testing)
+st.sidebar.text(f"API Key loaded: {api_key[:10]}...")
 
 @st.cache_resource
 def get_llm():
     return ChatOpenAI(
-        model="openai/gpt-oss-20b:free",
+        model="google/gemini-flash-1.5:free",
         api_key=SecretStr(api_key),
         base_url="https://openrouter.ai/api/v1",
         temperature=0.7
@@ -75,6 +84,8 @@ if 'conversational_rag_chain' not in st.session_state:
     st.session_state.conversational_rag_chain = None
 if 'pdf_hash' not in st.session_state:
     st.session_state.pdf_hash = None
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
 
 # Upload PDF
 uploaded_file = st.file_uploader("Choose a PDF file:", type='pdf')
@@ -109,9 +120,11 @@ if uploaded_file:
                 os.remove(temp_pdf)
             
             st.success("PDF processed successfully! You can now ask questions.")
+            # Reset chain so it gets recreated with new vectorstore
+            st.session_state.conversational_rag_chain = None
     
-    
-    if st.session_state.vectorstore is not None and (st.session_state.conversational_rag_chain is None or st.session_state.pdf_hash == current_hash):
+    # Create chains (only if not already created)
+    if st.session_state.vectorstore is not None and st.session_state.conversational_rag_chain is None:
         retriever = st.session_state.vectorstore.as_retriever()
         
         
@@ -170,34 +183,38 @@ if uploaded_file:
             output_messages_key="answer"
         )
     
-    # Display chat history
-    if session_id in st.session_state.store:
-        st.subheader("Chat History")
-        for message in st.session_state.store[session_id].messages:
-            if message.type == "human":
-                st.chat_message("user").write(message.content)
-            else:
-                st.chat_message("assistant").write(message.content)
+    # Display chat messages
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
     
     # User input
     user_input = st.chat_input("Ask a question about the PDF:")
     
     if user_input and st.session_state.conversational_rag_chain:
-        
-        st.chat_message("user").write(user_input)
+        # Add user message to chat
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.write(user_input)
         
         # Get response
-        with st.spinner("Thinking..."):
-            response = st.session_state.conversational_rag_chain.invoke(
-                {"input": user_input},
-                config={"configurable": {"session_id": session_id}}
-            )
-        
-      
-        st.chat_message("assistant").write(response['answer'])
-        
-        
-        st.rerun()
+        try:
+            with st.spinner("Thinking..."):
+                response = st.session_state.conversational_rag_chain.invoke(
+                    {"input": user_input},
+                    config={"configurable": {"session_id": session_id}}
+                )
+            
+            # Add assistant message to chat
+            st.session_state.messages.append({"role": "assistant", "content": response['answer']})
+            with st.chat_message("assistant"):
+                st.write(response['answer'])
+        except Exception as e:
+            error_msg = str(e)
+            if "401" in error_msg or "authentication" in error_msg.lower():
+                st.error(" Authentication failed. Please check your API key in Streamlit secrets.")
+            else:
+                st.error(f"Error: {error_msg}")
 else:
     st.info("Please upload a PDF file to start chatting.")
 # Adding a temp.pdf for checking , this is mini project of my collage in Operating System Lab
