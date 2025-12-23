@@ -1,6 +1,11 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[codz]
+*.py[cod]
 *$py.class
 
 # C extensions
@@ -23,6 +28,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -143,10 +149,16 @@ celerybeat.pid
 .venv
 env/
 venv/
+=======
+# Virtual environments
+venv/
+env/
+>>>>>>> e8a38f944e3c0c8be440dfda8f14e4ff19393685
 ENV/
 env.bak/
 venv.bak/
 
+<<<<<<< HEAD
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -208,3 +220,40 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+=======
+# Streamlit
+.streamlit/
+
+# Temporary files
+temp.pdf
+*.pdf
+*.tmp
+*.temp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# FAISS indexes
+*.faiss
+*.pkl
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+Thumbs.db
+.DS_Store
+>>>>>>> e8a38f944e3c0c8be440dfda8f14e4ff19393685
