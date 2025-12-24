@@ -155,7 +155,8 @@ with st.sidebar:
             "llama-3.3-70b-versatile",  # Best overall model
             "llama-3.1-70b-versatile",  # Great for complex tasks
             "llama-3.1-8b-instant",     # Fast and efficient
-            "mixtral-8x7b-32768"        # Good for long context
+            "mixtral-8x7b-32768",       # Good for long context
+            "groq/compound"             # For testing
         ],
         index=0
     )
