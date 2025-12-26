@@ -34,13 +34,6 @@ else:
 
 api_key=st.sidebar.text_input(label="Groq api key",type="password")
 
-if not db_uri:
-    st.info("Please enter the database info and uri")
-if not api_key:
-    st.info("Please add the Groq API key")
-## LLM model
-llm=ChatGroq(api_key=SecretStr(api_key),model="llama-3.3-70b-versatile",streaming=True)
-
 @st.cache_resource(ttl="2h")
 def configure_db(db_uri,mysql_host=None,mysql_user=None,mysql_password=None,mysql_db=None):
     if db_uri==LOCALDB:
@@ -51,11 +44,26 @@ def configure_db(db_uri,mysql_host=None,mysql_user=None,mysql_password=None,mysq
         if not (mysql_host and mysql_db and mysql_password and mysql_user):
             st.error("Please provide all MYSQL connection details.")
             st.stop()
+            return None
         
         # URL encode credentials to handle special characters
         encoded_user = quote_plus(mysql_user)
         encoded_password = quote_plus(mysql_password)
         return SQLDatabase(create_engine(f"mysql+mysqlconnector://{encoded_user}:{encoded_password}@{mysql_host}/{mysql_db}"))
+    return None
+
+# Check if all required inputs are provided before proceeding
+if not api_key:
+    st.info("Please add the Groq API key in the sidebar to continue")
+    st.stop()
+
+if db_uri==MYSQL:
+    if not (mysql_host and mysql_user and mysql_password and mysql_db):
+        st.info("Please provide all MySQL connection details in the sidebar")
+        st.stop()
+
+## LLM model
+llm=ChatGroq(api_key=SecretStr(api_key),model="llama-3.3-70b-versatile",streaming=True)
     
 if db_uri==MYSQL:
     db=configure_db(db_uri,mysql_host,mysql_user,mysql_password,mysql_db)
@@ -63,7 +71,7 @@ else:
     db=configure_db(db_uri)
 
 if db is None:
-    st.error("Database connection failed")
+    st.error("Failed to configure database")
     st.stop()
 
 ## toolkit
@@ -75,6 +83,7 @@ agent=create_sql_agent(
     verbose=True,
     agent_type="zero-shot-react-description"
 )
+
 if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
     st.session_state['messages']=[{'role':'assistant','content':'How can i help you?'}]
 
