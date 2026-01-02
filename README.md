@@ -1,6 +1,6 @@
 # Gen AI Projects
 
-A collection of AI-powered chatbot applications built with LangChain, Streamlit, and OpenRouter API.
+A comprehensive collection of AI-powered applications built with LangChain, Streamlit, and various free LLM APIs. This repository showcases practical implementations of chatbots, RAG systems, SQL agents, search engines, and text summarization tools.
 
 ## 🚀 Projects
 
@@ -16,6 +16,7 @@ A simple question-answering chatbot with a clean Streamlit interface.
 - Powered by free OpenRouter models (Google Gemini Flash, Mistral)
 - Clean and intuitive UI
 - Configurable response parameters
+- Multiple model implementations (OpenRouter, Ollama)
 
 **Files:**
 
@@ -23,6 +24,8 @@ A simple question-answering chatbot with a clean Streamlit interface.
 - `test_api.py` - API connection testing
 - `find_free_models.py` - Discover available free models
 - `ollamaapp.py` - Ollama integration variant
+- `test_free_models.py` - Test free model availability
+- `test_params.py` - Parameter configuration testing
 
 **Run:**
 
@@ -81,9 +84,6 @@ An advanced conversational chatbot with PDF support and persistent chat history.
 - `app.py` - Main application
 - `requirements.txt` - Python dependencies
 - `README.md` - Project-specific documentation
-- `DEPLOYMENT.md` - Streamlit Cloud deployment guide
-- `.streamlit/config.toml` - Streamlit configuration
-- `.gitignore` - Git exclusions
 
 **Run:**
 
@@ -92,27 +92,146 @@ cd conversational_q&a_chatbot
 streamlit run app.py
 ```
 
-**Deploy to Streamlit Cloud:**
-See `conversational_q&a_chatbot/DEPLOYMENT.md` for detailed deployment instructions.
+---
+
+### 4. Chat with SQL Database
+
+**Location:** `chat_with_sqldb/`
+
+A natural language interface for SQL databases powered by LangChain SQL agents and Groq's LLaMA model.
+
+**Features:**
+
+- 🗣️ Natural language to SQL query conversion
+- 🗄️ Multiple database support (SQLite and MySQL)
+- 🤖 AI-powered SQL agent using Groq LLaMA 3.3 70B
+- 💬 Interactive chat interface with message history
+- 🔍 Automatic query generation and execution
+
+**Files:**
+
+- `app.py` - Main Streamlit application
+- `sqlite.py` - SQLite database utilities
+- `requirements.txt` - Dependencies
+- `README.md` - Detailed documentation
+- `studentdb.db` - Sample SQLite database
+
+**Run:**
+
+```bash
+cd chat_with_sqldb
+streamlit run app.py
+```
+
+**Usage:**
+
+1. Choose between SQLite (default) or MySQL
+2. Enter your Groq API key
+3. Ask questions about your database in plain English
+4. View SQL queries and results
+
+---
+
+### 5. AI-Powered Search Engine
+
+**Location:** `search_engine/`
+
+An intelligent search application that uses LangChain agents to search across multiple sources (web, academic papers, and Wikipedia).
+
+**Features:**
+
+- 🔍 Multi-source search (DuckDuckGo, ArXiv, Wikipedia)
+- 🤖 Intelligent agent-based query routing
+- 🚀 Powered by Llama3-8B via Groq API
+- 💬 Streaming responses for better UX
+- 🎯 Context-aware tool selection
+- 📚 Academic paper search via ArXiv
+
+**Files:**
+
+- `app.py` - Main Streamlit application
+- `requirements.txt` - Dependencies
+- `README.md` - Documentation
+- `START_HERE.txt` - Quick start guide
+- `tools_agents.ipynb` - Jupyter notebook with examples
+
+**Run:**
+
+```bash
+cd search_engine
+streamlit run app.py
+```
+
+**Tools Available:**
+
+- **DuckDuckGo**: General web search
+- **ArXiv**: Academic research papers
+- **Wikipedia**: Encyclopedia knowledge
+
+---
+
+### 6. Text Summarization
+
+**Location:** `summerize_text/`
+
+A Jupyter notebook demonstrating text summarization capabilities using Groq's LLaMA model.
+
+**Features:**
+
+- Speech/text summarization
+- Powered by Groq LLaMA 3.3 70B
+- Expert system prompts for concise summaries
+- Interactive Jupyter notebook environment
+
+**Files:**
+
+- `text_summerization.ipynb` - Main notebook with examples
+
+**Run:**
+
+```bash
+cd summerize_text
+jupyter notebook text_summerization.ipynb
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Python 3.13.7**
+**Core Technologies:**
+
+- **Python 3.13+** - Programming language
 - **Streamlit** - Web UI framework
 - **LangChain** - LLM framework and chains
-- **OpenRouter** - AI model API with free tier
 - **FAISS** - Vector database for embeddings
 - **PyPDF** - PDF document processing
 - **NumPy** - Numerical operations for embeddings
 - **python-dotenv** - Environment variable management
 
+**AI Models & APIs:**
+
+- **OpenRouter API** - Free AI models (Gemini, Mistral)
+- **Groq API** - Fast LLaMA model inference
+- **SQLAlchemy** - Database connections and ORM
+
+**Additional Tools:**
+
+- **ArXiv API** - Academic paper search
+- **Wikipedia API** - Knowledge base queries
+- **DuckDuckGo Search** - Web search
+- **Jupyter Notebook** - Interactive development
+
+---
+
 ## 📋 Prerequisites
 
-- Python 3.13 or higher
-- OpenRouter API key (get it free at [openrouter.ai](https://openrouter.ai/))
-- Virtual environment (recommended)
+- **Python 3.8+** (Python 3.13 recommended)
+- **API Keys:**
+  - OpenRouter API key (free at [openrouter.ai](https://openrouter.ai/))
+  - Groq API key (free at [console.groq.com](https://console.groq.com/keys))
+- **Virtual environment** (recommended)
+
+---
 
 ## ⚙️ Setup
 
@@ -120,155 +239,168 @@ See `conversational_q&a_chatbot/DEPLOYMENT.md` for detailed deployment instructi
 
 ```bash
 git clone https://github.com/itsmeayan45/gen-ai.git
-cd gen-ai
+cd Gen-ai-projects
 ```
 
 ### 2. Create Virtual Environment
 
 ```bash
+# Create virtual environment
 python -m venv genvenv
-genvenv\Scripts\activate  # Windows
+
+# Activate (Windows)
+genvenv\Scripts\activate
+
+# Activate (Linux/Mac)
+source genvenv/bin/activate
 ```
 
 ### 3. Install Dependencies
 
 ```bash
+# Install all dependencies
 pip install -r requirements.txt
 ```
 
-### 4. Configure API Key
+### 4. Configure API Keys
 
 Create a `.env` file in the project root:
 
 ```env
 OPENROUTER_API_KEY=your_openrouter_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 LANGCHAIN_API_KEY=your_langchain_api_key_here  # Optional
 ```
 
 ### 5. Run Any Project
 
-# Navigate to the project folder and run:
-
-# Conversational Q&A Chatbot with PDF
-
-A Streamlit-based conversational AI chatbot that allows users to upload PDF documents and ask questions about their content using RAG (Retrieval Augmented Generation).
-
-## Features
-
-- **PDF Document Upload**: Upload any PDF file to analyze
-- **Conversational Memory**: Maintains chat history across the conversation
-- **Context-Aware Responses**: Uses chat history to understand follow-up questions
-- **RAG Implementation**: Combines document retrieval with LLM responses
-- **Session Management**: Support for multiple chat sessions with unique session IDs
-
-## Technology Stack
-
-- **Streamlit**: Web interface
-- **LangChain**: RAG pipeline and conversation management
-- **FAISS**: Vector store for document embeddings
-- **OpenRouter API**: Access to free LLM models (tngtech/tng-r1t-chimera:free)
-- **PyPDF**: PDF document loading
-
-## How It Works
-
-1. **PDF Processing**:
-
-   - PDF is uploaded and temporarily saved
-   - Document is loaded and split into chunks (1000 chars with 200 overlap)
-   - Chunks are embedded and stored in FAISS vector store
-
-2. **Query Processing**:
-
-   - User question is contextualized using chat history
-   - Relevant document chunks are retrieved
-   - LLM generates answer based on retrieved context
-
-3. **Conversation Flow**:
-   - Chat history is maintained per session
-   - Each question is processed with full conversation context
-   - Responses are concise and context-aware
-
-## Setup
-
-1. **Install Dependencies**:
+Navigate to the project folder and run:
 
 ```bash
-pip install streamlit langchain langchain-community langchain-openai faiss-cpu pypdf python-dotenv numpy
-```
+# Example: Run Q&A Chatbot
+cd Q&A_chatbot
+streamlit run app.py
 
-2. **Set Up API Key**:
-   Create a `.env` file in the project directory:
+# Example: Run Search Engine
+cd search_engine
+streamlit run app.py
 
-```
-OPENROUTER_API_KEY=your_api_key_here
-```
-
-3. **Run the Application**:
-   > > > > > > > e8a38f944e3c0c8be440dfda8f14e4ff19393685
-
-```bash
+# Example: Run SQL Chat
+cd chat_with_sqldb
 streamlit run app.py
 ```
 
-<<<<<<< HEAD
-Or for the RAG chatbot:
+---
 
-```bash
-streamlit run ragapp.py
-```
+## 🌐 Free AI Models Used
 
-## 🌐 Free AI Models
+This repository uses completely free AI models:
 
-All projects use free OpenRouter models:
+**OpenRouter (No Cost):**
 
 - `google/gemini-2.0-flash-exp:free`
 - `mistralai/mistral-7b-instruct:free`
+- `tngtech/tng-r1t-chimera:free`
 
-No API costs required for basic usage!
+**Groq (Free Tier):**
+
+- `llama-3.3-70b-versatile`
+- `llama3-8b-8192`
+
+No API costs required for basic usage! 🎉
+
+---
 
 ## 📁 Project Structure
 
 ```
 Gen-ai-projects/
-├── Q&A_chatbot/              # Basic Q&A chatbot
-│   ├── app.py
-│   ├── test_api.py
-│   └── find_free_models.py
-├── rag_q&a_chatbot/          # RAG chatbot with PDF
-│   ├── ragapp.py
-│   └── pdfs/
-├── conversational_q&a_chatbot/  # Advanced conversational chatbot
-│   ├── app.py
-│   ├── requirements.txt
-│   ├── README.md
-│   ├── DEPLOYMENT.md
-│   └── .streamlit/
-├── genvenv/                  # Virtual environment
-├── .env                      # API keys (not in git)
-├── .gitignore
-├── LICENSE
-├── requirements.txt
-└── README.md
+├── Q&A_chatbot/                    # Basic Q&A chatbot
+│   ├── app.py                      # Main application
+│   ├── ollamaapp.py               # Ollama variant
+│   ├── test_api.py                # API testing
+│   └── find_free_models.py        # Model discovery
+│
+├── rag_q&a_chatbot/               # RAG chatbot with PDF
+│   ├── ragapp.py                  # Main application
+│   └── pdfs/                      # PDF storage
+│
+├── conversational_q&a_chatbot/    # Advanced conversational chatbot
+│   ├── app.py                     # Main application
+│   ├── requirements.txt           # Dependencies
+│   └── README.md                  # Documentation
+│
+├── chat_with_sqldb/               # SQL database chatbot
+│   ├── app.py                     # Main application
+│   ├── sqlite.py                  # SQLite utilities
+│   ├── studentdb.db              # Sample database
+│   └── README.md                  # Documentation
+│
+├── search_engine/                 # AI-powered search
+│   ├── app.py                     # Main application
+│   ├── tools_agents.ipynb        # Examples notebook
+│   └── README.md                  # Documentation
+│
+├── summerize_text/                # Text summarization
+│   └── text_summerization.ipynb  # Jupyter notebook
+│
+├── genvenv/                       # Virtual environment
+├── app.py                         # Root chatbot app
+├── requirements.txt               # Global dependencies
+├── .env                           # API keys (not in git)
+├── .gitignore                     # Git exclusions
+├── LICENSE                        # MIT License
+└── README.md                      # This file
 ```
+
+---
 
 ## 🚢 Deployment
 
-The **Conversational Q&A Chatbot** is ready for deployment on Streamlit Cloud:
+### Streamlit Cloud Deployment
 
-1. Push to GitHub
-2. Connect to [share.streamlit.io](https://share.streamlit.io/)
-3. Add `OPENROUTER_API_KEY` in Streamlit secrets
-4. Deploy!
+Most projects are ready for deployment on Streamlit Cloud:
 
-See `conversational_q&a_chatbot/DEPLOYMENT.md` for detailed steps.
+1. **Push to GitHub**
+2. **Connect to [share.streamlit.io](https://share.streamlit.io/)**
+3. **Add API keys in Streamlit secrets:**
+   ```toml
+   OPENROUTER_API_KEY = "your_key_here"
+   GROQ_API_KEY = "your_key_here"
+   ```
+4. **Deploy!**
+
+For detailed deployment instructions, see individual project README files.
+
+---
+
+## 💡 Use Cases
+
+- **Q&A Chatbots**: Customer support, FAQs, general inquiries
+- **RAG Systems**: Document analysis, knowledge base queries, research assistance
+- **SQL Chat**: Natural language database queries, data analysis
+- **Search Engine**: Academic research, web search, knowledge discovery
+- **Text Summarization**: Document summarization, content compression
+
+---
 
 ## 🤝 Contributing
 
-Feel free to fork this repository and submit pull requests for improvements!
+Contributions are welcome! Feel free to:
+
+- Fork this repository
+- Create a feature branch
+- Submit pull requests
+- Report issues
+- Suggest improvements
+
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 👨‍💻 Author
 
@@ -276,48 +408,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - GitHub: [@itsmeayan45](https://github.com/itsmeayan45)
 
+---
+
 ## 🙏 Acknowledgments
 
-- LangChain for the amazing framework
-- OpenRouter for free AI model access
-- Streamlit for the easy-to-use web framework
+- **LangChain** - Amazing LLM framework
+- **OpenRouter** - Free AI model access
+- **Groq** - Fast LLM inference
+- **Streamlit** - Easy-to-use web framework
+- **Open Source Community** - For all the amazing tools and libraries
+
+
+## ⭐ Star This Repository
+
+If you find this project helpful, please give it a star! It helps others discover these resources.
 
 ---
 
-# **Star ⭐ this repository if you find it helpful!**
-
-## Usage
-
-1. Open the application in your browser (typically http://localhost:8501)
-2. Enter a session ID (or use the default)
-3. Upload a PDF file
-4. Wait for the PDF to be processed
-5. Start asking questions about the PDF content
-6. The chatbot will respond based on the document content and conversation history
-
-## Configuration
-
-- **Model**: `tngtech/tng-r1t-chimera:free` (via OpenRouter)
-- **Temperature**: 0.7
-- **Chunk Size**: 1000 characters
-- **Chunk Overlap**: 200 characters
-- **Embedding Dimensions**: 384 (using SimpleEmbeddings)
-
-## Notes
-
-- Uses a simple random embedding implementation (SimpleEmbeddings) for demonstration purposes
-- Free model accessed through OpenRouter API
-- Temporary PDF files are stored locally during processing
-- Chat history is stored in session state and persists during the session
-
-## Limitations
-
-- Uses random embeddings (not semantic) - for production use, implement proper embeddings
-- Depends on free API availability
-- Temporary files are created during PDF processing
-
-## Author
-
-Created as a mini project for Operating System Lab.
-
-> > > > > > > e8a38f944e3c0c8be440dfda8f14e4ff19393685
+**Happy Coding! 🚀**
