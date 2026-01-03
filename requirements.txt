@@ -14,3 +14,5 @@ numpy
 pydantic
 arxiv
 wikipedia
+validators
+youtube_transcript_api
